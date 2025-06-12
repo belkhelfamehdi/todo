@@ -1,23 +1,29 @@
 // components/SignUpForm.tsx
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import Button from '../components/Button';
 import { UserIcon, LockIcon } from '../components/Icons';
+import { useAuth } from '../AuthContext';
 
 const SignUpForm: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("USER");
+  const { signup } = useAuth();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [role, setRole] = useState('USER');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Les mots de passe ne correspondent pas.");
+      alert('Les mots de passe ne correspondent pas.');
       return;
     }
 
-    // Appel API d’inscription ici
-    console.log({ username, password, role });
+    try {
+      await signup(username, password, role);
+      alert('Compte créé');
+    } catch {
+      alert("Erreur lors de l'inscription");
+    }
   };
 
   return (

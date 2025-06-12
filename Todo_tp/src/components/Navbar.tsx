@@ -4,6 +4,7 @@ import Modal from './Modal';
 import LoginForm from '../ui/LoginForm';
 import SignUpForm from '../ui/SignUpForm';
 import { LoginIcon, UserIcon } from './Icons';
+import { useAuth } from '../AuthContext';
 
 interface NavbarProps {
   title: string;
@@ -11,8 +12,9 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ title }) => {
 
-    const [isModalLoginOpen, setIsModalLoginOpen] = useState<boolean>(false);
-    const [isModalSignupOpen, setIsModalSignupOpen] = useState<boolean>(false);
+  const { token, logout } = useAuth();
+  const [isModalLoginOpen, setIsModalLoginOpen] = useState<boolean>(false);
+  const [isModalSignupOpen, setIsModalSignupOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -23,14 +25,20 @@ const Navbar: React.FC<NavbarProps> = ({ title }) => {
                 <span>{title}</span>
             </div>
             <div className="flex items-center space-x-4 py-4 justify-center">
-                <Button onClick={() => setIsModalLoginOpen(true)} className="flex items-center space-x-2">
-                    <LoginIcon className="w-4 h-4" />
-                    <span>Login</span>
-                </Button>
-                <Button onClick={() => setIsModalSignupOpen(true)} className="flex items-center space-x-2">
-                    <UserIcon className="w-4 h-4" />
-                    <span>Sign Up</span>
-                </Button>
+                {token ? (
+                  <Button onClick={logout}>Logout</Button>
+                ) : (
+                  <>
+                    <Button onClick={() => setIsModalLoginOpen(true)} className="flex items-center space-x-2">
+                      <LoginIcon className="w-4 h-4" />
+                      <span>Login</span>
+                    </Button>
+                    <Button onClick={() => setIsModalSignupOpen(true)} className="flex items-center space-x-2">
+                      <UserIcon className="w-4 h-4" />
+                      <span>Sign Up</span>
+                    </Button>
+                  </>
+                )}
             </div>
             </div>
         </div>

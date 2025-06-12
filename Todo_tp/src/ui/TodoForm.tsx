@@ -1,31 +1,53 @@
-import React, { useState } from "react";
-import Button from "../components/Button";
-import { PlusIcon } from "../components/Icons";
+import React, { useState } from 'react';
+import Button from '../components/Button';
+import { PlusIcon } from '../components/Icons';
+import type { Todo } from '../api';
 
-const TodoForm: React.FC = () => {
-  const [status, setStatus] = useState("not_completed");
+interface Props {
+  onCreate: (todo: Omit<Todo, 'id'>) => void;
+}
+const TodoForm: React.FC<Props> = ({ onCreate }) => {
+  const [status, setStatus] = useState('not_completed');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onCreate({
+      title,
+      description,
+      completed: status === 'completed'
+    });
+    setTitle('');
+    setDescription('');
+    setStatus('not_completed');
+  };
 
   return (
     <div className="flex flex-col items-center justify-center pt-5 bg-gray-100">
       <h1 className="text-2xl font-bold mb-6">New To-Do</h1>
-      <form className="w-lg bg-white p-8 rounded shadow-md">
+      <form onSubmit={handleSubmit} className="w-lg bg-white p-8 rounded shadow-md">
         <div className="mb-4">
           <label htmlFor="title" className="block text-sm font-medium text-gray-700">Titre</label>
-          <input
-            type="text"
-            name="title"
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          />
+            <input
+              type="text"
+              name="title"
+              required
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
         </div>
 
         <div className="mb-4">
           <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            name="description"
-            required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-          />
+            <textarea
+              name="description"
+              required
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
         </div>
 
         <div className="mb-6">
