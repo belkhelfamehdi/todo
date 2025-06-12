@@ -15,9 +15,10 @@ type Props = {
   todos: Todo[];
   onDelete: (id: number) => void;
   onToggle: (id: number) => void;
+  onCreate: (todo: Omit<Todo, 'id'>) => void;
 };
 
-const TodoList: React.FC<Props> = ({ todos, onDelete, onToggle }) => {
+const TodoList: React.FC<Props> = ({ todos, onDelete, onToggle, onCreate }) => {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
@@ -74,7 +75,7 @@ const TodoList: React.FC<Props> = ({ todos, onDelete, onToggle }) => {
         </table>
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} hideHeader>
-        <TodoForm />
+        <TodoForm onCreate={(t) => { onCreate(t); setIsModalOpen(false); }} />
       </Modal>
     </>
   );
